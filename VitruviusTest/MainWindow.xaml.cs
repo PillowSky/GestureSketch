@@ -46,8 +46,8 @@ namespace VitruviusTest {
         
         int windowWidth = 1366;
         int windowHeight = 768;
-        int canvasWidth = 800;
-        int canvasHeight = 600;
+        int canvasWidth = 1366;
+        int canvasHeight = 768;
 
         //Debug debug;
 
@@ -59,7 +59,7 @@ namespace VitruviusTest {
             KinectSensor sensor = SensorExtensions.Default();
 
             if (sensor != null) {
-               // sensor.ColorStream.Enable();
+                //sensor.ColorStream.Enable();
                 sensor.SkeletonStream.Enable();
                 //sensor.EnableAllStreams();
                 //sensor.ColorFrameReady += Sensor_ColorFrameReady;
@@ -387,6 +387,12 @@ namespace VitruviusTest {
 
         private void Depth_Click(object sender, RoutedEventArgs e) {
             //_mode = Mode.Depth;
+        }
+
+        private void OnKeyDownHandler(object sender, KeyEventArgs e) {
+            if (e.Key == Key.C) {
+                canvas.Children.Clear();
+            }
         }
 
         [DllImport("user32.dll")]
