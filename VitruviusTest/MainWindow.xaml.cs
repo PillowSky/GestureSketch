@@ -227,6 +227,7 @@ namespace VitruviusTest {
                             //debug.status.Text = "Circle";
                         }
                     }
+                    rightStatus = Status.InActive;
                     break;
                 case 2:
                     left = skeletons.ElementAt(0);
@@ -392,6 +393,8 @@ namespace VitruviusTest {
         private void OnKeyDownHandler(object sender, KeyEventArgs e) {
             if (e.Key == Key.C) {
                 canvas.Children.Clear();
+                leftStatus = Status.InActive;
+                rightStatus = Status.InActive;
             }
         }
 
