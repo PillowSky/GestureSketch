@@ -27,7 +27,7 @@ namespace LightBuzz.Vitruvius.WPF
         /// <summary>
         /// The default drawing color.
         /// </summary>
-        static Color DEFAULT_COLOR = Colors.Aqua;
+        static Color DEFAULT_COLOR = Colors.LightCyan;
 
         /// <summary>
         /// The default circle radius.
