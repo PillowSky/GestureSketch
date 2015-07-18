@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -49,6 +50,8 @@ namespace VitruviusTest {
         int canvasWidth = 1366;
         int canvasHeight = 768;
 
+        Timer timer;
+        bool shouldClean = false;
         //Debug debug;
 
         public MainWindow() {
@@ -73,6 +76,13 @@ namespace VitruviusTest {
             }
             //debug = new Debug();
             //debug.Show();
+
+            timer = new Timer();
+            timer.Interval = 60000;
+            timer.Elapsed += onTimerElapsed;
+            timer.Start();
+
+            drawTip();
         }
 
         void Sensor_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e) {
@@ -86,9 +96,15 @@ namespace VitruviusTest {
         void Sensor_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e) {
             using (var frame = e.OpenSkeletonFrame()) {
                 if (frame != null) {
-                    //canvas.Children.Clear();
-                    canvas.ClearSkeletons();
-                    //tblHeights.Text = string.Empty;
+                    if (shouldClean) {
+                        canvas.Children.Clear();
+                        leftStatus = Status.InActive;
+                        rightStatus = Status.InActive;
+                        drawTip();
+                        shouldClean = false;
+                    } else {
+                        canvas.ClearSkeletons();
+                    }
 
                     var skeletons = frame.Skeletons().Where(s => s.TrackingState == SkeletonTrackingState.Tracked).OrderBy(s => s.Joints[JointType.Head].Position.X);
                     foreach (var skeleton in skeletons) {
@@ -395,7 +411,47 @@ namespace VitruviusTest {
                 canvas.Children.Clear();
                 leftStatus = Status.InActive;
                 rightStatus = Status.InActive;
+                drawTip();
             }
+        }
+
+
+        void onTimerElapsed(object sender, ElapsedEventArgs e) {
+            shouldClean = true;
+        }
+
+        void drawTip() {
+            Line line = new Line {
+                X1 = 100,
+                Y1 = 100,
+                X2 = 200,
+                Y2 = 100,
+                Stroke = lineColor,
+                StrokeThickness = 4,
+            };
+            canvas.Children.Add(line);
+
+            Ellipse circle = new Ellipse {
+                Width = 100,
+                Height = 100,
+                Stroke = circleColor,
+                StrokeThickness = 4
+            };
+
+            Canvas.SetLeft(circle, 100);
+            Canvas.SetTop(circle, 200);
+            canvas.Children.Add(circle);
+
+            Rectangle rect = new Rectangle {
+                Width = 100,
+                Height = 100,
+                Stroke = rectangleColor,
+                StrokeThickness = 4,
+            };
+
+            Canvas.SetLeft(rect, 100);
+            Canvas.SetTop(rect, 400);
+            canvas.Children.Add(rect);
         }
 
         [DllImport("user32.dll")]
